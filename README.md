@@ -1,34 +1,11 @@
-![sqlboiler logo](https://i.imgur.com/lMXUTPE.png)
+# Fork
 
-[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/aarondl/sqlboiler/blob/master/LICENSE)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4)](https://pkg.go.dev/mod/github.com/aarondl/sqlboiler/v4)
-[![Slack](https://img.shields.io/badge/slack-%23general-lightgrey.svg)](https://sqlboiler.from-the.cloud)
-![ActionsCI](https://github.com/aarondl/sqlboiler/workflows/test/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/aarondl/sqlboiler)](http://goreportcard.com/report/aarondl/sqlboiler)
+This is a fork of https://github.com/aarondl/sqlboiler, and intended to change things that will make working with SQLBoiler,
+a bit easier... e.g.
 
-# Maintenance Mode
-
-This package is currently in maintenance mode, which means:
-
-1. It generally does not accept new features.
-2. It does accept bug fixes and version compatability changes provided by the community.
-3. Maintainers usually do not resolve reported issues.
-4. Community members are encouraged to help each other with reported issues.
-
-## Alternatives
-
-If looking for an actively maintained alternative, consider the following:
-
-### 1. Bob - <https://github.com/stephenafamo/bob>
-
-Bob is very similar to SQLBoiler. It was directly inspired by SQLBoiler and was created by a maintainer of SQLBoiler.
-
-A comparison can be found here: <https://bob.stephenafamo.com/vs/sqlboiler/>.
-
-### 2. sqlc - <https://github.com/sqlc-dev/sqlc>
-
-`sqlc` is a command line tool that generates type-safe code from SQL.  
-It is not an ORM but for many use cases it can be a good alternative to SQLBoiler.
+1. generated code currently exports private types... update to export only public types
+2. allow adding custom code to the export-directory of sqlboiler, i.e. sqlboiler shouldn't delete the generated directory,
+   and instead only update the files it is responsible for
 
 # About SQLBoiler
 
@@ -40,10 +17,6 @@ like [sql-migrate](https://github.com/rubenv/sql-migrate)
 or some other migration tool to manage this part of the database's life-cycle.
 
 # Note on versions
-
-v1, v2, and v3 are no longer maintained.
-
-v3 is the last GOPATH-compatible version.
 
 v4 has no real breaking changes between v3 and itself other than Go modules
 and is the only maintained version. Note this does not work with GOPATH
@@ -120,16 +93,6 @@ of that SQLBoiler also confers the following benefits:
     - [Exists](#exists)
     - [Enums](#enums)
     - [Constants](#constants)
-  - [FAQ](#faq)
-    - [Won't compiling models for a huge database be very slow?](#wont-compiling-models-for-a-huge-database-be-very-slow)
-    - [Missing imports for generated package](#missing-imports-for-generated-package)
-    - [How should I handle multiple schemas](#how-should-i-handle-multiple-schemas)
-    - [How do I use the types.BytesArray for Postgres bytea arrays?](#how-do-i-use-typesbytesarray-for-postgres-bytea-arrays)
-    - [Why aren't my time.Time or null.Time fields working in MySQL?](#why-arent-my-timetime-or-nulltime-fields-working-in-mysql)
-    - [Where is the homepage?](#where-is-the-homepage)
-    - [Why are the auto-generated tests failing?](#why-are-the-auto-generated-tests-failing)
-- [Benchmarks](#benchmarks)
-- [Third-Party Extensions](#third-party-extensions)
 
 ## About SQL Boiler
 
@@ -170,10 +133,10 @@ of that SQLBoiler also confers the following benefits:
 
 | Database          | Driver Location                                                                                     |
 | ----------------- | --------------------------------------------------------------------------------------------------- |
-| PostgreSQL        | [https://github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-psql](drivers/sqlboiler-psql)       |
-| MySQL             | [https://github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-mysql](drivers/sqlboiler-mysql)     |
-| MSSQLServer 2012+ | [https://github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-mssql](drivers/sqlboiler-mssql)     |
-| SQLite3           | [https://github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-sqlite3](drivers/sqlboiler-sqlite3) |
+| PostgreSQL        | [https://github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-psql](drivers/sqlboiler-psql)       |
+| MySQL             | [https://github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-mysql](drivers/sqlboiler-mysql)     |
+| MSSQLServer 2012+ | [https://github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-mssql](drivers/sqlboiler-mssql)     |
+| SQLite3           | [https://github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-sqlite3](drivers/sqlboiler-sqlite3) |
 | CockroachDB       | https://github.com/glerchundi/sqlboiler-crdb                                                        |
 
 **Note:** SQLBoiler supports out of band driver support so you can make your own
@@ -187,7 +150,7 @@ For a comprehensive list of available operations and examples please see [Featur
 ```go
 import (
   // Import this so we don't have to use qm.Limit etc.
-  . "github.com/aarondl/sqlboiler/v4/queries/qm"
+  . "github.com/mustaslimeen/sqlboiler/v4/queries/qm"
 )
 
 // Open handle to database like normal
@@ -309,16 +272,16 @@ Ensure you don't forget any /v suffixes or you'll end up on an old version.
 
 ```shell
 # Go 1.16 and above:
-go install github.com/aarondl/sqlboiler/v4@latest
-go install github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-psql@latest
+go install github.com/mustaslimeen/sqlboiler/v4@latest
+go install github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-psql@latest
 
 # Go 1.15 and below:
 # Install sqlboiler v4 and the postgresql driver (mysql, mssql, sqlite3 also available)
 # NOTE: DO NOT run this inside another Go module (like your project) as it will
 # pollute your go.mod with a bunch of stuff you don't want and your binary
 # will not get installed.
-GO111MODULE=on go get -u -t github.com/aarondl/sqlboiler/v4
-GO111MODULE=on go get github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-psql
+GO111MODULE=on go get -u -t github.com/mustaslimeen/sqlboiler/v4
+GO111MODULE=on go get github.com/mustaslimeen/sqlboiler/v4/drivers/sqlboiler-psql
 ```
 
 To install `sqlboiler` as a dependency in your project use the commands below
@@ -327,9 +290,9 @@ into your `go.mod` file at the correct version.
 
 ```shell
 # Do not forget the trailing /v4 and /v8 in the following commands
-go get github.com/aarondl/sqlboiler/v4
+go get github.com/mustaslimeen/sqlboiler/v4
 # Assuming you're going to use the null package for its additional null types
-go get github.com/aarondl/null/v8
+go get github.com/mustaslimeen/null/v8
 ```
 
 #### Configuration
@@ -462,7 +425,7 @@ generate models for, we can invoke the sqlboiler command line utility.
 
 ```text
 SQL Boiler generates a Go ORM from template files, tailored to your database schema.
-Complete documentation is available at http://github.com/aarondl/sqlboiler
+Complete documentation is available at http://github.com/mustaslimeen/sqlboiler
 
 Usage:
   sqlboiler [flags] <driver>
@@ -1244,7 +1207,7 @@ safe, but be careful!
 
 ```go
 // Dot import so we can access query mods directly instead of prefixing with "qm."
-import . "github.com/aarondl/sqlboiler/v4/queries/qm"
+import . "github.com/mustaslimeen/sqlboiler/v4/queries/qm"
 
 // Use a raw query against a generated struct (Pilot in this example)
 // If this query mod exists in your call, it will override the others.
@@ -1384,7 +1347,7 @@ in combination with your own custom, non-generated model.
 
 ### Binding
 
-For a comprehensive ruleset for `Bind()` you can refer to our [pkg.go.dev](https://pkg.go.dev/github.com/aarondl/sqlboiler/v4/queries#Bind).
+For a comprehensive ruleset for `Bind()` you can refer to our [pkg.go.dev](https://pkg.go.dev/github.com/mustaslimeen/sqlboiler/v4/queries#Bind).
 
 The `Bind()` [Finisher](#finisher) allows the results of a query built with
 the [Raw SQL](#raw-query) method or the [Query Builder](#query-building) methods to be bound
@@ -1664,7 +1627,7 @@ tx.Rollback()
 
 It's also worth noting that there's a way to take advantage of `boil.SetDB()`
 by using the
-[boil.BeginTx()](https://pkg.go.dev/github.com/aarondl/sqlboiler/v4/boil#BeginTx)
+[boil.BeginTx()](https://pkg.go.dev/github.com/mustaslimeen/sqlboiler/v4/boil#BeginTx)
 function. This opens a transaction using the globally stored database.
 
 ### Debug Logging
@@ -1739,7 +1702,7 @@ greylist in cases where you want to insert a Go zero value.
 **NOTE:** CreatedAt/UpdatedAt are not included in `Whitelist` automatically.
 
 See the documentation for
-[boil.Columns.InsertColumnSet](https://pkg.go.dev/github.com/aarondl/sqlboiler/v4/boil/#Columns.InsertColumnSet)
+[boil.Columns.InsertColumnSet](https://pkg.go.dev/github.com/mustaslimeen/sqlboiler/v4/boil/#Columns.InsertColumnSet)
 for more details.
 
 ```go
@@ -1792,7 +1755,7 @@ documentation above for more details.
 **NOTE:** CreatedAt/UpdatedAt are not included in `Whitelist` automatically.
 
 See the documentation for
-[boil.Columns.UpdateColumnSet](https://pkg.go.dev/github.com/aarondl/sqlboiler/v4/boil/#Columns.UpdateColumnSet)
+[boil.Columns.UpdateColumnSet](https://pkg.go.dev/github.com/mustaslimeen/sqlboiler/v4/boil/#Columns.UpdateColumnSet)
 for more details.
 
 ```go
@@ -2039,152 +2002,3 @@ where := &models.UserWhere
 
 u, err := models.Users(where.Name.EQ("hello"), qm.Or(cols.Age + "=?", 5))
 ```
-
-## FAQ
-
-#### Won't compiling models for a huge database be very slow?
-
-No, because Go's toolchain - unlike traditional toolchains - makes the compiler do most of the work
-instead of the linker. This means that when the first `go install` is done it can take
-a little bit of time because there is a lot of code that is generated. However, because of this
-work balance between the compiler and linker in Go, linking to that code afterwards in the subsequent
-compiles is extremely fast.
-
-#### Missing imports for generated package
-
-The generated models might import a couple of packages that are not on your system already, so
-`cd` into your generated models directory and type `go get -u -t` to fetch them. You will only need
-to run this command once, not per generation.
-
-#### How should I handle multiple schemas?
-
-If your database uses multiple schemas you should generate a new package for each of your schemas.
-Note that this only applies to databases that use real, SQL standard schemas (like PostgreSQL), not
-fake schemas (like MySQL).
-
-#### How do I use types.BytesArray for Postgres bytea arrays?
-
-Only "escaped format" is supported for types.BytesArray. This means that your byte slice needs to have
-a format of "\\x00" (4 bytes per byte) opposed to "\x00" (1 byte per byte). This is to maintain compatibility
-with all Postgres drivers. Example:
-
-`x := types.BytesArray{0: []byte("\\x68\\x69")}`
-
-Please note that multi-dimensional Postgres ARRAY types are not supported at this time.
-
-#### Why aren't my time.Time or null.Time fields working in MySQL?
-
-You _must_ use a DSN flag in MySQL connections, see: [Requirements](#requirements)
-
-#### Where is the homepage?
-
-The homepage for the [SQLBoiler](https://github.com/aarondl/sqlboiler) [Golang ORM](https://github.com/aarondl/sqlboiler)
-generator is located at: https://github.com/aarondl/sqlboiler
-
-#### Why are the auto-generated tests failing?
-
-The tests generated for your models package with sqlboiler are fairly
-error-prone. They are usually broken by constraints in the database
-that sqlboiler can't hope to understand.
-
-During regular run-time this isn't an issue because your code will throw errors
-and you will fix it however the auto-generated tests can only report those
-errors and it seems like something is wrong when in reality the only issue is
-that the auto generated tests can't understand that your `text` column is
-validated by a regex that says it must be composed solely of the 'b' character
-repeated 342 times.
-
-These tests are broken especially by foreign key constraints because of the
-parallelism we use. There's also no understanding in the tests of dependencies
-based on these foreign keys. As such there is a process that removes the foreign
-keys from your schema when they are run, if this process messes up you will get
-errors relating to foreign key constraints.
-
-## Benchmarks
-
-If you'd like to run the benchmarks yourself check out our [boilbench](https://github.com/aarondl/boilbench) repo.
-
-```bash
-go test -bench . -benchmem
-```
-
-### Results (lower is better)
-
-Test machine:
-
-```text
-OS:  Ubuntu 16.04
-CPU: Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz
-Mem: 16GB
-Go:  go version go1.8.1 linux/amd64
-```
-
-The graphs below have many runs like this as input to calculate errors. Here
-is a sample run:
-
-```text
-BenchmarkGORMSelectAll/gorm-8         20000   66500 ns/op   28998 B/op    455 allocs/op
-BenchmarkGORPSelectAll/gorp-8         50000   31305 ns/op    9141 B/op    318 allocs/op
-BenchmarkXORMSelectAll/xorm-8         20000   66074 ns/op   16317 B/op    417 allocs/op
-BenchmarkKallaxSelectAll/kallax-8    100000   18278 ns/op    7428 B/op    145 allocs/op
-BenchmarkBoilSelectAll/boil-8        100000   12759 ns/op    3145 B/op     67 allocs/op
-
-BenchmarkGORMSelectSubset/gorm-8      20000    69469 ns/op   30008 B/op   462 allocs/op
-BenchmarkGORPSelectSubset/gorp-8      50000    31102 ns/op    9141 B/op   318 allocs/op
-BenchmarkXORMSelectSubset/xorm-8      20000    64151 ns/op   15933 B/op   414 allocs/op
-BenchmarkKallaxSelectSubset/kallax-8 100000    16996 ns/op    6499 B/op   132 allocs/op
-BenchmarkBoilSelectSubset/boil-8     100000    13579 ns/op    3281 B/op    71 allocs/op
-
-BenchmarkGORMSelectComplex/gorm-8     20000    76284 ns/op   34566 B/op   521 allocs/op
-BenchmarkGORPSelectComplex/gorp-8     50000    31886 ns/op    9501 B/op   328 allocs/op
-BenchmarkXORMSelectComplex/xorm-8     20000    68430 ns/op   17694 B/op   464 allocs/op
-BenchmarkKallaxSelectComplex/kallax-8 50000    26095 ns/op   10293 B/op   212 allocs/op
-BenchmarkBoilSelectComplex/boil-8    100000    16403 ns/op    4205 B/op   102 allocs/op
-
-BenchmarkGORMDelete/gorm-8           200000    10356 ns/op    5059 B/op    98 allocs/op
-BenchmarkGORPDelete/gorp-8          1000000     1335 ns/op     352 B/op    13 allocs/op
-BenchmarkXORMDelete/xorm-8           200000    10796 ns/op    4146 B/op   122 allocs/op
-BenchmarkKallaxDelete/kallax-8       300000     5141 ns/op    2241 B/op    48 allocs/op
-BenchmarkBoilDelete/boil-8          2000000      796 ns/op     168 B/op     8 allocs/op
-
-BenchmarkGORMInsert/gorm-8           100000    15238 ns/op    8278 B/op   150 allocs/op
-BenchmarkGORPInsert/gorp-8           300000     4648 ns/op    1616 B/op    38 allocs/op
-BenchmarkXORMInsert/xorm-8           100000    12600 ns/op    6092 B/op   138 allocs/op
-BenchmarkKallaxInsert/kallax-8       100000    15115 ns/op    6003 B/op   126 allocs/op
-BenchmarkBoilInsert/boil-8          1000000     2249 ns/op     984 B/op    23 allocs/op
-
-BenchmarkGORMUpdate/gorm-8           100000    18609 ns/op    9389 B/op   174 allocs/op
-BenchmarkGORPUpdate/gorp-8           500000     3180 ns/op    1536 B/op    35 allocs/op
-BenchmarkXORMUpdate/xorm-8           100000    13149 ns/op    5098 B/op   149 allocs/op
-BenchmarkKallaxUpdate/kallax-8       100000    22880 ns/op   11366 B/op   219 allocs/op
-BenchmarkBoilUpdate/boil-8          1000000     1810 ns/op     936 B/op    18 allocs/op
-
-BenchmarkGORMRawBind/gorm-8           20000    65821 ns/op   30502 B/op   444 allocs/op
-BenchmarkGORPRawBind/gorp-8           50000    31300 ns/op    9141 B/op   318 allocs/op
-BenchmarkXORMRawBind/xorm-8           20000    62024 ns/op   15588 B/op   403 allocs/op
-BenchmarkKallaxRawBind/kallax-8      200000     7843 ns/op    4380 B/op    46 allocs/op
-BenchmarkSQLXRawBind/sqlx-8          100000    13056 ns/op    4572 B/op    55 allocs/op
-BenchmarkBoilRawBind/boil-8          200000    11519 ns/op    4638 B/op    55 allocs/op
-```
-
-<img src="http://i.imgur.com/SltE8UQ.png"/><img src="http://i.imgur.com/lzvM5jJ.png"/><img src="http://i.imgur.com/SS0zNd2.png"/>
-
-<img src="http://i.imgur.com/Kk0IM0J.png"/><img src="http://i.imgur.com/1IFtpdP.png"/><img src="http://i.imgur.com/t6Usecx.png"/>
-
-<img src="http://i.imgur.com/98DOzcr.png"/><img src="http://i.imgur.com/NSp5r4Q.png"/><img src="http://i.imgur.com/dEGlOgI.png"/>
-
-<img src="http://i.imgur.com/W0zhuGb.png"/><img src="http://i.imgur.com/YIvDuFv.png"/><img src="http://i.imgur.com/sKwuMaU.png"/>
-
-<img src="http://i.imgur.com/ZUMYVmw.png"/><img src="http://i.imgur.com/T61rH3K.png"/><img src="http://i.imgur.com/lDr0xhY.png"/>
-
-<img src="http://i.imgur.com/LWo10M9.png"/><img src="http://i.imgur.com/Td15owT.png"/><img src="http://i.imgur.com/45XXw4K.png"/>
-
-<img src="http://i.imgur.com/lpP8qds.png"/><img src="http://i.imgur.com/hLyH3jQ.png"/><img src="http://i.imgur.com/C2v10t3.png"/>
-
-## Third-Party Extensions
-
-Below are extensions for SQL Boiler developed by community, use them at your own risk.
-
-- [sqlboiler-extensions](https://github.com/tiendc/sqlboiler-extensions): Generates additional methods for models, particlarly for bulk operations.
-- [boilingseed](https://github.com/stephenafamo/boilingseed): Generates helpers to seed the database with data.
-- [boilingfactory](https://github.com/stephenafamo/boilingfactory): Generates helpers to create and insert test models on the fly.
